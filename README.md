@@ -1,66 +1,88 @@
-## Foundry
+# wambsNFTee Deployment Guide
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+This guide will walk you through the process i deployed the `wambsNFTee` NFT contract using Foundry, an Ethereum development environment and framework. 
 
-Foundry consists of:
+## Prerequisites
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+- Foundry installed on your local machine. You can follow the [Foundry installation guide](https://book.getfoundry.sh/getting-started/installation.html).
+- A QuickNode RPC URL.
+- Your Ethereum private key.
 
-## Documentation
+## Step-by-Step Instructions
 
-https://book.getfoundry.sh/
+### 1. Contract Code
 
-## Usage
+Create a file named `wambsNFTee.sol` inside a directory named `src` and paste the following contract code into it:
 
-### Build
+```solidity
+// SPDX-Licence-Identifier: MIT
+pragma solidity ^0.8.13;
 
-```shell
-$ forge build
+// Import the ERC721 interface from OpenZeppelin
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+
+// Define the NFT contract
+contract wambsNFTee is ERC721 {
+    //  Define the constructor
+    constructor() ERC721("wambsNFTee", "WAMBS") {
+        // Mint an NFT to the contract creator
+        _mint(msg.sender, 1);
+    }
+}
 ```
 
-### Test
+### 2. Install OpenZeppelin Contracts
 
-```shell
-$ forge test
+Navigate to your project directory and run the following command to fetch OpenZeppelin's contracts repository from GitHub:
+
+```sh
+forge install OpenZeppelin/openzeppelin-contracts
 ```
 
-### Format
+### 3. Update Remappings
 
-```shell
-$ forge fmt
+Run the following command to generate a `remappings.txt` file that acts as a configuration file for all your remappings:
+
+```sh
+forge remappings > remappings.txt
 ```
 
-### Gas Snapshots
+### 4. Compile the Contract
 
-```shell
-$ forge snapshot
+Delete the `test` folder (if it exists) and run the following command to compile your contract:
+
+```sh
+forge build
 ```
 
-### Anvil
+### 5. Set Up Deployment Configuration
 
-```shell
-$ anvil
+Create a `.env` file in your project root directory and add the following variables:
+
+```sh
+ALCHEMY_RPC_URL=<Your ALCHEMY RPC URL>
+PRIVATE_KEY=<Your Ethereum private key>
 ```
 
-### Deploy
+Make sure to replace `<Your ALCHEMY RPC URL>` and `<Your Ethereum private key>` with your actual ALCHEMY RPC URL and private key respectively.
 
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+### 6. Deploy the Contract
+
+Run the following command to deploy your contract to the Sepolia Test Network:
+
+```sh
+source .env
+forge create --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY src/wambsNFTee.sol:wambsNFTee
 ```
 
-### Cast
+This command will compile your contract and deploy it. Once deployed, it will output the contract address.
 
-```shell
-$ cast <subcommand>
-```
+### 7. Verify Deployment
 
-### Help
+Copy the contract address from the output and look it up on [Sepolia Etherscan](https://sepolia.etherscan.io/). Open the first transaction there to verify that an NFT was minted and transferred to your address.
 
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+
+### Additional Resources
+
+- [Foundry Documentation](https://book.getfoundry.sh/)
+- [OpenZeppelin Contracts](https://github.com/OpenZeppelin/openzeppelin-contracts)
