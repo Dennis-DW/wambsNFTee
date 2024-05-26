@@ -75,7 +75,8 @@ source .env
 forge create --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY src/wambsNFTee.sol:wambsNFTee
 ```
 
-This command will compile your contract and deploy it. Once deployed, it will output the contract address.
+This command will compiled  contract and deploy it. Once deployed, it will output the contract address.
+                      ![ The Deployed wambsNFTee](./images/wambsNFTee.png)
 
 ### 7. Verify Deployment
 
